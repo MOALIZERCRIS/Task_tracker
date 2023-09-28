@@ -56,44 +56,68 @@
         let saveTaskBtn = document.getElementById("SaveTaskBtn");
         let showCompletedCheckbox = document.getElementById("show-completed");
         let display = document.getElementById("display");
+        let deleteTask =
 
 
 
        
         addTaskBtn.addEventListener("click", function () {
-            let taskText = taskInput.value.trim();
+            let taskText = taskInput.value;
             if (taskText !== "") {
                 let taskItem = document.createElement("li");
                 taskItem.textContent = taskText;
                 taskList.appendChild(taskItem);
                 taskInput.value = "";
             }
+            
            
         });
 
-        // Saving in local web storage
-        saveTaskBtn.addEventListener("click", function () {
-            let tasks = Array.from(taskList.querySelectorAll("li")).map(function (task) {
-                return task.textContent;
-            });
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-            display.textContent = "Tasks saved!";
-        });
+        function checkFields() {
+            let inputFields = document.querySelectorAll('input[type="text"]');
+            let flag = true;
+            inputFields.forEach(input => {
+                if (input.value == "") {
+                    flag = false;
+                }
+            })
+            return flag;
+        }
 
-        // Event listener to load tasks from localStorage
-        window.addEventListener("load", function () {
-            const savedTasks = localStorage.getItem("tasks");
-            if (savedTasks) {
-                let tasks = JSON.parse(savedTasks);
-                tasks.forEach(function (taskText) {
-                    let taskItem = document.createElement("li");
-                    taskItem.textContent = taskText;
-                    taskList.appendChild(taskItem);
+        function addTask() {
+            if (checkFields()) {
+                let task = task-input.value;
+                let newInput = [];
+                txtOptions.forEach(newInput => {
+                    newInput.push(newInput.value);
                 });
-            }
-        });
 
-        // Event listener to toggle completed tasks
+                if (localStorage.getItem("taskRecord") == null) {
+                    let taskRecord = [];
+                    taskRecord.push({
+                        task : task,
+                        newInput : newInput,
+                       
+                    });
+
+                    localStorage.setItem("taskRecord", JSON.stringify(taskRecord));
+                    display.innerHTML = "Task saved successfully";
+                } else {
+                    let quizData = JSON.parse(localStorage.getItem("taskRecord"));
+                    taskRecord.push({
+                        task : task,
+                        newInput : newInput,
+                    });
+
+                    localStorage.setItem("taskRecord", JSON.stringify(taskRecord));
+                    display.innerHTML = "Task saved successfully";
+                }
+            } else {
+                display.innerHTML = "An Input is required";
+            }
+            location.reload();
+        }
+
         showCompletedCheckbox.addEventListener("change", function () {
             const tasks = taskList.querySelectorAll("li");
             for (const task of tasks) {
